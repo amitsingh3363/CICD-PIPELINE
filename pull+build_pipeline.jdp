@@ -13,21 +13,6 @@ pipeline {
             steps {
                 sh '''
                 cd backend
-
-                echo "===== JAVA DETAILS ====="
-                echo "JAVA_HOME=$JAVA_HOME"
-
-                which java
-                java -version
-
-                which javac
-                javac -version
-
-                echo "===== MAVEN DETAILS ====="
-                which mvn
-                mvn -version
-
-                echo "===== BUILD START ====="
                 mvn clean package -DskipTests
                 '''
             }

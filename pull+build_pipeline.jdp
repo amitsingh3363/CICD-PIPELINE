@@ -1,29 +1,48 @@
 pipeline {
     agent any
+
     stages {
+
         stage('PULL') {
             steps {
-              git branch: 'dev', url: 'https://github.com/amitsingh3363/Easycrud-student-registration.git' 
+                git branch: 'dev', url: 'https://github.com/amitsingh3363/Easycrud-student-registration.git'
             }
         }
+
         stage('BUILD') {
             steps {
                 sh '''
-cd backend
-mvn package -DskipTests
-'''
+                cd backend
+
+                echo "===== JAVA DETAILS ====="
+                echo "JAVA_HOME=$JAVA_HOME"
+
+                which java
+                java -version
+
+                which javac
+                javac -version
+
+                echo "===== MAVEN DETAILS ====="
+                which mvn
+                mvn -version
+
+                echo "===== BUILD START ====="
+                mvn clean package -DskipTests
+                '''
             }
         }
+
         stage('TEST') {
             steps {
                 echo "TEST SUCCESS"
             }
         }
+
         stage('DEPLOY') {
             steps {
                 echo "DEPLOY SUCCESS"
             }
-        }    
-            
+        }
     }
 }

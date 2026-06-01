@@ -3,7 +3,7 @@ pipeline {
     stages {
         stage('PULL') {
             steps {
-              git branch: 'dev', url: 'https://github.com/omverma001/Easycrud-student-registration.git'  
+              git branch: 'dev', url: 'https://github.com/amitsingh3363/Easycrud-student-registration.git'
             }
         }
         stage('BUILD') {

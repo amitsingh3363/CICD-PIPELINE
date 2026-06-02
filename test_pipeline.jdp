@@ -1,0 +1,37 @@
+pipeline {
+    agent any
+
+    stages {
+
+        stage('PULL') {
+            steps {
+                git branch: 'dev', url: 'https://github.com/amitsingh3363/Easycrud-student-registration.git'
+            }
+        }
+
+        stage('BUILD') {
+            steps {
+                sh '''
+                cd backend
+                mvn clean package -DskipTests
+                '''
+            }
+        }
+
+        stage('TEST') {
+            steps {
+                withSonarQubeEnv(InstallationName: 'sonar' credentialsId: 'sonar') {
+                  sh '''mvn clean compile
+mvn corg.sonarsource.scanner.maven:sonar-maven-plugin:sonar \\
+  -Dsonar.projectKey=jenkins-cicd'''
+}
+            }
+        }
+
+        stage('DEPLOY') {
+            steps {
+                echo "DEPLOY SUCCESS"
+            }
+        }
+    }
+}

@@ -20,11 +20,14 @@ pipeline {
 
         stage('TEST') {
             steps {
-                withSonarQubeEnv(InstallationName: 'sonar',credentialsId: 'sonar') {
-                  sh '''mvn clean compile
-mvn corg.sonarsource.scanner.maven:sonar-maven-plugin:sonar \\
-  -Dsonar.projectKey=jenkins-cicd'''
-}
+                withSonarQubeEnv(installationName: 'sonar') {
+                    sh '''
+                    cd backend
+                    mvn clean compile
+                    mvn org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
+                    -Dsonar.projectKey=jenkins-cicd
+                    '''
+                }
             }
         }
 

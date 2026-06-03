@@ -1,0 +1,52 @@
+pipeline {
+    agent any
+
+    stages {
+
+        stage('PULL') {
+            steps {
+                git branch: 'dev', url: 'https://github.com/amitsingh3363/Easycrud-student-registration.git'
+            }
+        }
+
+        stage('BUILD') {
+            steps {
+                sh '''
+                cd backend
+                mvn clean package -DskipTests
+                '''
+            }
+        }
+
+        stage('TEST') {
+            steps {
+                withSonarQubeEnv(installationName: 'sonar') {
+                    sh '''
+                    cd backend
+                    mvn compile
+                    mvn org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
+                    -Dsonar.projectKey=jenkins-cicd
+                    '''
+                }
+            }
+        }
+
+        stage('QUALITY-GATE') {
+          steps {
+            timeout(time: 10, unit: 'MINUTES') {
+              waitForQualityGate abortPipeline: true
+        }
+    }
+}
+
+        stage('DELIVERY') {
+            steps {
+                sh '''
+        aws s3 cp \
+        backend/target/student-registration-backend-0.0.1-SNAPSHOT.jar.original \
+        s3://my-bucket-buxx-3345/
+        '''
+            }
+        }
+    }
+}
